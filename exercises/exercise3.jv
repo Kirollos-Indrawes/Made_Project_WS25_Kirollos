@@ -1,0 +1,110 @@
+pipeline Made_Project_Exercise_3{
+
+    GDPExtractor
+    -> FileToWorkbook
+    -> SheetSeletor
+    -> RangeSelector
+    -> ColumnRenameISO
+    -> ColumnRenameGDP_per_Capita
+    -> ColumnRenameShare_Of_Government
+    -> SheetToTable_1
+    -> bond_Issuance_TableLoader;
+      
+    ColumnRenameShare_Of_Government
+    -> SheetToTable_2
+    -> gdp_Per_Capita_Loader;
+
+
+
+    block GDPExtractor oftype HttpExtractor { url: "https://thedocs.worldbank.org/en/doc/7d852628d96b9411d43e5d36d5dff941-0050062022/original/Graphs-Chapter-5-02082022.xlsx";}
+
+    block FileToWorkbook oftype XLSXInterpreter { }    
+
+    block SheetSeletor oftype SheetPicker {
+        sheetName: "Figure S5.1.2";
+    }
+
+    block RangeSelector oftype CellRangeSelector {
+        select: range P2:S45;
+    }
+
+    block ColumnRenameISO oftype CellWriter{
+        at: cell A1;
+        write: ["Country Code"];
+    }
+
+    block ColumnRenameGDP_per_Capita oftype CellWriter{
+        at: cell C1;
+        write: ["GDP per Capita"];
+    }
+
+    block ColumnRenameShare_Of_Government oftype CellWriter{
+        at: cell D1;
+        write: ["Bond Issuance Share"];
+    }
+
+
+    block SheetToTable_1 oftype TableInterpreter {
+        header: true;
+        columns: [
+            "Country Code" oftype DropInvalid,
+            "Bond Issuance Share" oftype DropInvalid3
+        ];
+    }
+
+    block SheetToTable_2 oftype TableInterpreter {
+        header: true;
+        columns: [
+            "Country Code" oftype DropInvalid,
+            "GDP per Capita" oftype DropInvalid2
+        ];
+    }
+
+    block bond_Issuance_TableLoader oftype SQLiteLoader {
+        table: "bondIssuance";
+        file: "./country-stats.sqlite";
+         }
+
+    block gdp_Per_Capita_Loader oftype SQLiteLoader{
+        table: "gdpPerCapita";
+        file: "./country-stats.sqlite";
+    }     
+
+
+}
+
+valuetype DropInvalid oftype CountryCodeAlpha3 {
+
+  constraints: [
+    DropNull
+  ];
+}
+
+
+valuetype DropInvalid2 oftype decimal {
+
+    constraints: [
+        DropNotPositive
+        
+    ];
+}
+
+valuetype DropInvalid3 oftype decimal {
+
+    constraints: [
+        DropNotDecimal,
+    ];
+
+}
+
+constraint DropNull oftype DenylistConstraint {
+    denylist: [" "]; 
+    }
+
+constraint DropNotPositive on decimal: 
+    value > 0;
+
+
+constraint DropNotDecimal on decimal:
+    value > 0 and value < 1;
+    
