@@ -25,7 +25,7 @@ pipeline Made_Project_Exercise_3{
     }
 
     block RangeSelector oftype CellRangeSelector {
-        select: range P2:S45;
+        select: range P2:S*;
     }
 
     block ColumnRenameISO oftype CellWriter{
@@ -107,4 +107,3 @@ constraint DropNotPositive on decimal:
 
 constraint DropNotDecimal on decimal:
     value > 0 and value < 1;
-    
