@@ -25,7 +25,7 @@ pipeline Made_Project_Exercise_3{
     }
 
     block RangeSelector oftype CellRangeSelector {
-        select: range P2:S*;
+        select: range P1:S*;
     }
 
     block ColumnRenameISO oftype CellWriter{
