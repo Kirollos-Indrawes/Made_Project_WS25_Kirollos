@@ -1,6 +1,6 @@
 pipeline Made_Project_Excercise_4 {
 
-    CarsFileExtractor
+    WeatherFileExtractor
     -> ZipArchiveInterpreter
     -> AgencyFilePicker
     -> FileToSheet
@@ -13,7 +13,7 @@ pipeline Made_Project_Excercise_4 {
     -> celsius_to_fahrenheit_transformer_2
     -> Weatherloader;
 
-    block CarsFileExtractor oftype HttpExtractor { url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";}
+    block WeatherFileExtractor oftype HttpExtractor { url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";}
 
     block ZipArchiveInterpreter oftype ArchiveInterpreter {
     archiveType: "zip"; 
@@ -66,9 +66,9 @@ pipeline Made_Project_Excercise_4 {
     uses: celsius_to_fahrenheit;
     }
     
-    block Weatherloader oftype CSVFileLoader {
-        //table: "temperatures";
-        file: "C:/Users/kirol/Desktop/test9.csv";
+    block Weatherloader oftype SQLiteLoader {
+        table: "temperatures";
+        file: "./temperatures.sqlite";
     }
 }    
 
@@ -83,7 +83,6 @@ valuetype DropInvalid oftype integer {
 
     constraints: [
         DropNotPositive
-        
     ];
 }
 
