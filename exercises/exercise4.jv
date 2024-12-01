@@ -9,7 +9,7 @@ pipeline Made_Project_Excercise_4 {
     -> SheetToTable
     -> celsius_to_fahrenheit_transformer_1
     -> celsius_to_fahrenheit_transformer_2
-    -> testloader;
+    -> Weatherloader;
 
     block CarsFileExtractor oftype LocalFileExtractor {
     filePath: "C:/Users/kirol/Downloads/data.csv"; 
@@ -57,8 +57,9 @@ pipeline Made_Project_Excercise_4 {
     uses: celsius_to_fahrenheit;
     }
     
-    block testloader oftype CSVFileLoader {
-        file: "C:/Users/kirol/Desktop/test7.csv";
+    block Weatherloader oftype SQLiteLoader {
+        table: "temperatures";
+        file: "./temperatures.sqlite";
     }
 }
 
