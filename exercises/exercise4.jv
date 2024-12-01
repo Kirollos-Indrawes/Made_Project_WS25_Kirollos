@@ -1,0 +1,81 @@
+pipeline Made_Project_Excercise_4 {
+
+    CarsFileExtractor
+    -> FileToSheet
+    -> FileTocsv 
+    -> RangeSelector
+    -> ColumnsDeleter
+    -> ColumnRenamer
+    -> SheetToTable
+    -> celsius_to_fahrenheit_transformer_1
+    -> celsius_to_fahrenheit_transformer_2
+    -> testloader;
+
+    block CarsFileExtractor oftype LocalFileExtractor {
+    filePath: "C:/Users/kirol/Downloads/data.csv"; 
+    }
+    block FileToSheet oftype TextFileInterpreter { }
+
+    block FileTocsv oftype CSVInterpreter { 
+        delimiter: ";";
+    }
+
+    block RangeSelector oftype CellRangeSelector {
+        select: range A1:K*;
+    }
+
+    block ColumnsDeleter oftype ColumnDeleter {
+        delete: [column F, column G, column H, column I, column K];
+    }
+
+    block ColumnRenamer oftype CellWriter {
+    at: range A1:F1;
+    write: ["id", "producer", "model", "month", "tempreature", "battery_temperature"];
+    }
+
+    block SheetToTable oftype TableInterpreter {
+    header: true;
+    columns: [
+        "id" oftype DropInvalid,
+        "producer" oftype text,
+        "model" oftype text,
+        "month" oftype integer,
+        "tempreature" oftype decimal,
+        "battery_temperature" oftype decimal
+    ];
+    }
+
+    block celsius_to_fahrenheit_transformer_1 oftype TableTransformer {
+    inputColumns: ['tempreature'];
+    outputColumn: 'tempreature';
+    uses: celsius_to_fahrenheit;
+    }
+
+    block celsius_to_fahrenheit_transformer_2 oftype TableTransformer {
+    inputColumns: ['battery_temperature'];
+    outputColumn: 'battery_temperature';
+    uses: celsius_to_fahrenheit;
+    }
+    
+    block testloader oftype CSVFileLoader {
+        file: "C:/Users/kirol/Desktop/test7.csv";
+    }
+}
+
+transform celsius_to_fahrenheit {
+    from tempCelsius oftype decimal;
+    to tempfahrenheit oftype decimal;
+
+    tempfahrenheit: (tempCelsius * 9/5) + 32;
+}
+
+valuetype DropInvalid oftype integer {
+
+    constraints: [
+        DropNotPositive
+        
+    ];
+}
+
+constraint DropNotPositive on integer: 
+    value > 0;
