@@ -1,6 +1,8 @@
 pipeline Made_Project_Excercise_4 {
 
     CarsFileExtractor
+    -> ZipArchiveInterpreter
+    -> AgencyFilePicker
     -> FileToSheet
     -> FileTocsv 
     -> RangeSelector
@@ -11,9 +13,16 @@ pipeline Made_Project_Excercise_4 {
     -> celsius_to_fahrenheit_transformer_2
     -> Weatherloader;
 
-    block CarsFileExtractor oftype LocalFileExtractor {
-    filePath: "C:/Users/kirol/Downloads/data.csv"; 
+    block CarsFileExtractor oftype HttpExtractor { url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";}
+
+    block ZipArchiveInterpreter oftype ArchiveInterpreter {
+    archiveType: "zip"; 
     }
+
+    block AgencyFilePicker oftype FilePicker {
+    path: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip/data.csv";
+    }
+    
     block FileToSheet oftype TextFileInterpreter { }
 
     block FileTocsv oftype CSVInterpreter { 
@@ -57,11 +66,11 @@ pipeline Made_Project_Excercise_4 {
     uses: celsius_to_fahrenheit;
     }
     
-    block Weatherloader oftype SQLiteLoader {
-        table: "temperatures";
-        file: "./temperatures.sqlite";
+    block Weatherloader oftype CSVFileLoader {
+        //table: "temperatures";
+        file: "C:/Users/kirol/Desktop/test9.csv";
     }
-}
+}    
 
 transform celsius_to_fahrenheit {
     from tempCelsius oftype decimal;
