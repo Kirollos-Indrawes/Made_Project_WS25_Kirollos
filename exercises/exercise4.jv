@@ -68,7 +68,7 @@ pipeline Made_Project_Excercise_4 {
     
     block Weatherloader oftype SQLiteLoader {
         table: "temperatures";
-        file: "C:/Users/kirol/Desktop/temperatures.sqlite";}
+        file: "./temperatures.sqlite";}
 }    
 
 transform celsius_to_fahrenheit {
