@@ -41,7 +41,7 @@ pipeline Made_Project_Excercise_4 {
 
     block ColumnRenamer oftype CellWriter {
     at: range A1:F1;
-    write: ["id", "producer", "model", "month", "tempreature", "battery_temperature"];
+    write: ["id", "producer", "model", "month", "temperature", "battery_temperature"];
     }
 
     block SheetToTable oftype TableInterpreter {
@@ -51,14 +51,14 @@ pipeline Made_Project_Excercise_4 {
         "producer" oftype text,
         "model" oftype text,
         "month" oftype integer,
-        "tempreature" oftype decimal,
+        "temperature" oftype decimal,
         "battery_temperature" oftype decimal
     ];
     }
 
     block celsius_to_fahrenheit_transformer_1 oftype TableTransformer {
-    inputColumns: ['tempreature'];
-    outputColumn: 'tempreature';
+    inputColumns: ['temperature'];
+    outputColumn: 'temperature';
     uses: celsius_to_fahrenheit;
     }
 
