@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "Running the pipeline..."
 python3 ./pipeline.py
 
 # Test 1: Check if Datasets are there
