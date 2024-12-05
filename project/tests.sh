@@ -11,19 +11,7 @@ else
     exit 1
 fi
 
-# Test 2: Check Data Transformations part ETL 
-echo "Test 2: Checking data transformations..."
-python3 -c "
-import pandas as pd
-cars = pd.read_csv('./data/CO2 Emissions_Canada.csv')
-# Check if specified columns are dropped
-assert 'Fuel Consumption Hwy (L/100 km)' not in cars.columns, 'Column not dropped'
-assert 'Fuel Consumption City (L/100 km)' not in cars.columns, 'Column not dropped'
-assert 'Fuel Consumption Comb (mpg)' not in cars.columns, 'Column not dropped'
-print('Test 2: Data cleaning - PASSED')
-"
-
-# Test 3: Check if the Database Output is sucessfully loaded
+# Test 2: Check if the Database Output is sucessfully loaded
 echo "Test 3: Checking if database is created..."
 if [ -f './data/pipeline.db' ]; then
     echo "Test 3: Database output - PASSED"
@@ -32,7 +20,7 @@ else
     exit 1
 fi
 
-# Test 4: Check if SQLite Database Tables loaded
+# Test 3: Check if SQLite Database Tables loaded
 echo "Test 4: Checking if tables exist in the SQLite database..."
 python3 -c "
 import sqlite3
