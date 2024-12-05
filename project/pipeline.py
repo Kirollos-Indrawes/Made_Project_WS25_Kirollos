@@ -149,7 +149,7 @@ co2_can['Model'] = co2_can['Model'].astype('category')
 #plt.title('Fuel Name/ Value')
 #plt.show()
 
-folder_path = r'C:/Users/kirol/Desktop/Made_Project_WS25_Kirollos/data'
+folder_path = r'./data'
 
 if not os.path.exists(folder_path):
     os.makedirs(folder_path)
