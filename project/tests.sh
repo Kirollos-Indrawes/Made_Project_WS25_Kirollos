@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python3 ./pipeline.py
+python3 ./project/pipeline.py
 
 # Test 1: Check if Datasets are there
 echo "Test 1: Checking if datasets are downloaded..."
