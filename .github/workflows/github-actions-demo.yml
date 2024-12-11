@@ -7,5 +7,8 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
 
+      - name: Make tests.sh executable
+        run: chmod +x ./project/tests.sh
+
       - name: Running Test
         run: ./project/tests.sh
