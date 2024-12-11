@@ -28,8 +28,5 @@ jobs:
           mkdir -p ~/.kaggle
           echo '{"username":"${{ secrets.KAGGLE_USERNAME }}", "key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
 
-      - name: Make tests.sh executable
-        run: chmod +x ./project/tests.sh
-
       - name: Run Tests
         run: ./project/tests.sh
