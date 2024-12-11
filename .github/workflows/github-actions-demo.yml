@@ -20,7 +20,8 @@ jobs:
       - name: Install Dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip install kaggle
+          pip install kaggle pandas seaborn matplotlib.pyplot sqlite3 os
+    
 
       - name: Set up Kaggle API credentials
         run: |
