@@ -7,6 +7,15 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install Libraries
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install kaggle
+
       - name: Make tests.sh executable
         run: chmod +x ./project/tests.sh
 
