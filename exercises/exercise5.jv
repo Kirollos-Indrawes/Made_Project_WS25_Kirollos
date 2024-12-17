@@ -1,0 +1,74 @@
+pipeline Made_Project_Excercise_5 {
+
+    FileExtractor
+    -> ZipArchiveInterpreter
+    ->AgencyFilePicker
+    -> FileToSheet
+    -> FileTocsv
+    -> ColumnsDeleter
+    -> SheetToTable
+    -> stopsloader;
+
+
+    block FileExtractor oftype HttpExtractor {
+    url: "https://gtfs.rhoenenergie-bus.de/GTFS.zip";
+    }
+
+    block ZipArchiveInterpreter oftype ArchiveInterpreter {
+    archiveType: "zip";
+    }
+
+    block AgencyFilePicker oftype FilePicker {
+    path: "./stops.txt";  
+    }
+    
+    block FileToSheet oftype TextFileInterpreter { }
+
+    block FileTocsv oftype CSVInterpreter { 
+          delimiter: '"' ;
+    }
+
+    block ColumnsDeleter oftype ColumnDeleter {
+        delete: [column M];
+    }
+
+    block SheetToTable oftype TableInterpreter {
+    header: true;
+    columns: [
+        "stop_id" oftype integer,
+        "stop_name" oftype text,
+        "stop_lat" oftype DropInvalid2,
+        "stop_lon" oftype DropInvalid2,
+        "zone_id" oftype DropInvalid,
+    ];
+    }
+
+    block stopsloader oftype SQLiteLoader {
+        table: "stops";
+        file: "./gtfs.sqlite";}
+        
+}
+
+valuetype DropInvalid oftype text {
+
+  constraints: [
+    Only1925
+  ];
+}
+
+valuetype DropInvalid2 oftype decimal {
+
+  constraints: [
+    Valid
+  ];
+}
+
+constraint Only1925 oftype AllowlistConstraint {
+    allowlist: ['1925']; 
+    }
+
+
+constraint Valid oftype RangeConstraint {
+    lowerBound: -90;
+    upperBound: 90; 
+    } 
